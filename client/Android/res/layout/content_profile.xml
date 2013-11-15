@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fuxk_base_content_color"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/left_drawer_user_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dd_dimen_200px"
+        android:background="@color/fuxk_base_color_cyan"
+        android:padding="@dimen/dd_dimen_30px" >
+
+        <ImageView
+            android:id="@+id/user_logo"
+            android:layout_width="@dimen/dd_dimen_100px"
+            android:layout_height="@dimen/dd_dimen_100px"
+            android:layout_alignParentBottom="true"
+            android:scaleType="center"
+            android:src="@drawable/wolf_personal_info" />
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_marginLeft="@dimen/dd_dimen_15px"
+            style="@style/TextViewStyleMiddle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/user_logo"
+            android:layout_alignBottom="@+id/user_logo"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@+id/user_logo"
+            android:text="user_name" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/left_drawer_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/fuxk_base_divide_line_color"
+        android:dividerHeight="1px" >
+    </ListView>
+
+</LinearLayout>
