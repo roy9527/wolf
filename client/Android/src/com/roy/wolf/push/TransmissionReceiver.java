@@ -13,7 +13,7 @@ public class TransmissionReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context arg0, Intent intent) {
 		Bundle bundle = intent.getExtras();
-		Log.d("GexinSdkDemo", "onReceive() action=" + bundle.getInt("action"));
+		Log.d("Wolf", "onReceive() action=" + bundle.getInt("action"));
 		switch (bundle.getInt(Consts.CMD_ACTION)) {
 		case Consts.GET_MSG_DATA:
 			// 获取透传(payload)数据
@@ -27,7 +27,7 @@ public class TransmissionReceiver extends BroadcastReceiver {
 		case Consts.GET_CLIENTID:
 			// 获取 ClientID(CID)
 			String cid = bundle.getString("clientid");
-			Log.d("GexinSdkDemo", "Got ClientID:" + cid);
+			Log.d("Wolf", "Got ClientID:" + cid);
 			// TODO:
 			/*
 			 * 第三方应用需要将 ClientID 上传到第三方服务器,并且将当前用户帐号和 ClientID 进行关联,以便以后通过用户帐号查找
@@ -37,7 +37,7 @@ public class TransmissionReceiver extends BroadcastReceiver {
 			break;
 		case Consts.BIND_CELL_STATUS:
 			String cell = bundle.getString("cell");
-			Log.d("GexinSdkDemo", "BIND_CELL_STATUS:" + cell);
+			Log.d("Wolf", "BIND_CELL_STATUS:" + cell);
 			break;
 		default:
 			break;

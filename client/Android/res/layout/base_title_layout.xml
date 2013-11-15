@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dd_dimen_96px"
+    android:background="@color/fuxk_base_color_white_" >
+
+    <ImageView
+        android:id="@+id/normal_title_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dd_dimen_30px"
+        android:background="@drawable/fuxk_back" />
+
+    <RelativeLayout
+        android:id="@+id/normal_title_operate_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" >
+
+        <LinearLayout
+            android:id="@+id/normal_title_operate_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dd_dimen_30px"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/normal_title_operate_left"
+                style="@style/TextViewStyleMiddle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dd_dimen_20px"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/normal_title_operate_right"
+                style="@style/TextViewStyleMiddle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/normal_title_operate_loading"
+        android:layout_width="@dimen/dd_dimen_48px"
+        android:layout_height="@dimen/dd_dimen_48px"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:indeterminateOnly="true"
+        android:indeterminateDrawable="@drawable/dd_normal_loading_bg"
+        android:layout_marginRight="@dimen/dd_dimen_30px"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/normal_title_name"
+        style="@style/TextViewStyleBig"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLength="15"
+        android:singleLine="true" />
+
+    <FrameLayout
+        android:id="@+id/normal_title_toast_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dd_dimen_96px"
+        android:gravity="center" >
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/fuxk_base_color_gray" />
+
+</RelativeLayout>

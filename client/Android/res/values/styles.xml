@@ -17,4 +17,19 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="TextViewStyleBig" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/dd_dimen_38px</item>
+        <item name="android:textColor">@color/fuxk_base_color_black</item>
+    </style>
+
+    <style name="TextViewStyleMiddle" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/dd_dimen_28px</item>
+        <item name="android:textColor">@color/fuxk_base_color_black</item>
+    </style>
+
+    <style name="TextViewStyleSmall" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/dd_dimen_24px</item>
+        <item name="android:textColor">@color/fuxk_base_color_black</item>
+    </style>
+
 </resources>

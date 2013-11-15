@@ -3187,18 +3187,4 @@ public final class StringUtil {
       }
       return "..." + str.substring(str.length() - (maxWidth - 3));
   }
-  
-  public static List removeEmpty(List list){
-	  List replace = new ArrayList();
-	  Object obj;
-	  for (Iterator iter = list.iterator(); iter.hasNext();) {
-		 obj = iter.next();
-	     if(obj != null){
-	    	 replace.add(obj);
-	     }
-	  }
-	  
-	  return replace;
-  }
-  
 }

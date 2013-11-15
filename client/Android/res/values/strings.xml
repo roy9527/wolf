@@ -2,7 +2,10 @@
 <resources>
 
     <string name="app_name">Wolf</string>
+    <string name="title_main">我的雷达</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+
+    <!-- button -->
+    <string name="wbtn_return_current_location">回到当前位置</string>
 
 </resources>

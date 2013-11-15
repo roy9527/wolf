@@ -13,7 +13,7 @@ public class WolfApplication extends Application {
 	public static final String strKey = "C12fe738d81c558952faa3896af365e3";
 
 	public boolean m_bKeyRight = true;
-	BMapManager mBMapManager = null;
+	public BMapManager mBMapManager = null;
 
 	@Override
 	public void onCreate() {

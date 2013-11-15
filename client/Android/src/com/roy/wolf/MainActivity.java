@@ -9,8 +9,11 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.protocol.HTTP;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,9 +35,9 @@ import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.mapapi.map.PopupClickListener;
 import com.baidu.mapapi.map.PopupOverlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.igexin.slavesdk.MessageManager;
 import com.roy.wolf.application.WolfApplication;
 import com.roy.wolf.guanzi.GuanZiActivity;
+import com.roy.wolf.net.IWHttpsClient;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -141,7 +144,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		MessageManager.getInstance().initialize(this.getApplicationContext());
 		mMapView = (MapView) findViewById(R.id.bmapsView);
 		mMapView.setBuiltInZoomControls(true);
 

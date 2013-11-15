@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 public class RoyHttpManager {
@@ -173,8 +174,10 @@ public class RoyHttpManager {
 		initDispatcher();
 		initRequest();
 		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-		int w = wm.getDefaultDisplay().getWidth();
-		int h = wm.getDefaultDisplay().getHeight();
+		DisplayMetrics dm = new DisplayMetrics();
+		wm.getDefaultDisplay().getMetrics(dm);
+		int w = dm.widthPixels;
+		int h = dm.heightPixels;
 		
 		String p = android.os.Build.MODEL;
 		String b = android.os.Build.BRAND;

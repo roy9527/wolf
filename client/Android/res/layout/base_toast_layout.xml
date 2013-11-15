@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fuxk_base_color_white"
+    android:gravity="center"
+    android:paddingLeft="@dimen/dd_dimen_40px"
+    android:paddingRight="@dimen/dd_dimen_40px" >
+
+    <TextView
+        android:id="@+id/normal_title_toast_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/dd_dimen_27px" />
+
+</LinearLayout>

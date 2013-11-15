@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 5.0.0去你大爷的分割线 -->
+
+    <!-- 重要、提醒、确认 -->
+    <color name="fuxk_base_color_orange">#ff9600</color>
+    <color name="fuxk_base_color_orange_press">#fa6400</color>
+    <color name="fuxk_base_color_list_press">#dcdcdc</color>
+
+    <!-- 数字金额 -->
+    <color name="fuxk_base_color_red">#ff1e00</color>
+    <!-- 选中、控制 -->
+    <color name="fuxk_base_color_cyan">#32dcd2</color>
+    <!-- 商品名、正文 -->
+    <color name="fuxk_base_color_black">#323232</color>
+    <!-- 次级标题 -->
+    <color name="fuxk_base_color_gray_black">#646464</color>
+    <!-- 辅助、小标题、未选中tab -->
+    <color name="fuxk_base_color_gray">#969696</color>
+    <color name="fuxk_base_color_white">#ffffff</color>
+    <color name="fuxk_base_color_pure_black">#000000</color>
+    <color name="fuxk_base_divide_line_color">#dcdcdc</color>
+    <color name="fuxk_base_content_color">#f0f0f0</color>
+    <color name="fuxk_ingot_yellow_color">#fafae6</color>
+    <color name="dang_xinxi_bg">#40000000</color>
+    <color name="mix_cancel_edit">#c8c8c8</color>
+    <color name="fuxk_base_color_white_">#B2ffffff</color>
+    <color name="fuxk_base_color_black_">#80000000</color>
+
+    <!-- order settle mark -->
+    <color name="fuxk_settle_black_mark">#1A000000</color>
+    <color name="fuxk_settle_white_mark">#F3FFFFFF</color>
+    <color name="mix_color_transparent">#50000000</color>
+    <color name="mix_color_transparent_input">#30ffffff</color>
+    <color name="fuxk_gift_card_0">#ffe2ce</color>
+    <color name="fuxk_gift_card_1">#d2faff</color>
+    <color name="fuxk_gift_card_2">#c8fac8</color>
+    <color name="fuxk_gift_card_0_">#fa6432</color>
+    <color name="fuxk_gift_card_1_">#1eb4ff</color>
+    <color name="fuxk_gift_card_2_">#32c828</color>
+
+    <!-- double 11 color -->
+    <color name="fuxk_double_11_0">#ff3c00</color>
+    <color name="fuxk_double_11_1">#87b4a0</color>
+    <color name="fuxk_double_11_2">#ebb400</color>
+    <color name="fuxk_double_11_3">#00af7d</color>
+    <color name="fuxk_double_11_4">#6ea0b9</color>
+    <color name="fuxk_double_11_5">#0000cd</color>
+
+</resources>
