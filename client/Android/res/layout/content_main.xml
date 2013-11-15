@@ -10,18 +10,4 @@
         android:layout_height="fill_parent"
         android:clickable="true" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:padding="15dp" >
-
-        <Button
-            android:id="@+id/fetch_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wbtn_return_current_location" />
-    </LinearLayout>
-
 </RelativeLayout>

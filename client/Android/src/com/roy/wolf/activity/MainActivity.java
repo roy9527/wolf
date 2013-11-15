@@ -157,7 +157,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		initCenter();
 		switchTitleLoading(true);
 		mLocationClient.start();
-		findViewById(R.id.fetch_location).setOnClickListener(this);
+//		findViewById(R.id.fetch_location).setOnClickListener(this);
 		showFanPoint(1);
 	}
 
@@ -256,7 +256,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
-		case R.id.fetch_location:
+//		case R.id.fetch_location:
 			// if (!mLocationClient.isStarted()) {
 			// mLocationClient.start();
 			// return;

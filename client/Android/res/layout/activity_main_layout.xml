@@ -4,17 +4,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:id="@+id/normal_content_layout_"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/normal_drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="match_parent" >
 
-        <include
+        <FrameLayout
+            android:id="@+id/content_frame"
             android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/content_main" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/left_drawer"
+            android:layout_width="@dimen/dd_dimen_520px"
             android:layout_height="match_parent"
-            layout="@layout/content_main" />
-    </LinearLayout>
+            android:layout_gravity="start"
+            android:paddingTop="@dimen/dd_dimen_96px" >
+
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/content_profile" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/right_drawer"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:paddingTop="@dimen/dd_dimen_96px" >
+        </FrameLayout>
+    </android.support.v4.widget.DrawerLayout>
 
     <include
         android:id="@+id/normal_title_layout"
