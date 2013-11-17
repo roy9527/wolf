@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.MKGeneralListener;
 import com.baidu.mapapi.map.MKEvent;
+import com.roy.wolf.model.UserInfoEntry;
 
 public class WolfApplication extends Application {
 
@@ -15,6 +16,8 @@ public class WolfApplication extends Application {
 	public boolean m_bKeyRight = true;
 	public BMapManager mBMapManager = null;
 
+	public UserInfoEntry userInfo = new UserInfoEntry();
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();

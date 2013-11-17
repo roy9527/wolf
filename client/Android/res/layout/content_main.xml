@@ -10,4 +10,49 @@
         android:layout_height="fill_parent"
         android:clickable="true" />
 
+    <LinearLayout
+        android:id="@+id/bottom_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dd_dimen_100px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/fuxk_base_color_white_"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tab_location"
+            style="@style/TextViewStyleMiddle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="我的位置" />
+
+        <TextView
+            android:id="@+id/tab_satellite"
+            style="@style/TextViewStyleMiddle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="查看卫星视图" />
+
+        <TextView
+            android:id="@+id/tab_traffic"
+            style="@style/TextViewStyleMiddle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="查看实况交通" />
+
+        <TextView
+            android:id="@+id/tab_nearly"
+            style="@style/TextViewStyleMiddle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="看看附近" />
+    </LinearLayout>
+
 </RelativeLayout>

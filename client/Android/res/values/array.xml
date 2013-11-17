@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="base_left_menu_array">
+        <item name="menu_my_radar">我的雷达</item>
+        <item name="menu_release_status">发布广播</item>
+        <item name="menu_release_activities">发起活动</item>
+        <item name="menu_exit">退出应用</item>
+    </string-array>
+
+</resources>

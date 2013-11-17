@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -32,7 +34,7 @@ import com.roy.wolf.guanzi.GuanZiActivity;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 	private MapView mMapView;
-
+	private GeoPoint mCurrentPoint;
 	public LocationClient mLocationClient = null;
 	public BDLocationListener myListener = new BDLocationListener() {
 
@@ -100,9 +102,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 			lo.setData(ld);
 			mMapView.getOverlays().add(lo);
 			mMapView.refresh();
-			GeoPoint point = new GeoPoint((int) (ld.latitude * 1E6),
+			mCurrentPoint = new GeoPoint((int) (ld.latitude * 1E6),
 					(int) (ld.longitude * 1E6));
-			mMapView.getController().setCenter(point);
+			mMapView.getController().animateTo(mCurrentPoint);
 			mMapView.getController().setZoom(18);
 
 		}
@@ -157,10 +159,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		initCenter();
 		switchTitleLoading(true);
 		mLocationClient.start();
-//		findViewById(R.id.fetch_location).setOnClickListener(this);
+		// findViewById(R.id.fetch_location).setOnClickListener(this);
 		showFanPoint(1);
+		initBottomTab();
 	}
 
+	private void initBottomTab() {
+		LinearLayout l = (LinearLayout) findViewById(R.id.bottom_tab_layout);
+		int s = l.getChildCount();
+		for (int i = 0; i < s; i++) {
+			l.getChildAt(i).setOnClickListener(this);
+		}
+	}
+	
 	private void initCenter() {
 		MapController mMapController = mMapView.getController();
 		mMapController.setCenter(getPoint(-1));// 设置地图中心点
@@ -205,9 +216,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		po1.showPopup(tv, point, 10);
 	}
 
-	//116.452512,39.964858 大串
-	//116.446408,39.964561 麦当劳
-	//116.445833,39.968145 太熟悉
+	// 116.452512,39.964858 大串
+	// 116.446408,39.964561 麦当劳
+	// 116.445833,39.968145 太熟悉
 	private void showFanPoint(int index) {
 		Drawable d = getResources().getDrawable(R.drawable.boss);
 		Drawable d1 = getResources().getDrawable(R.drawable.yt);
@@ -219,7 +230,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		oi.setAnchor(OverlayItem.ALIGN_BOTTON);
 		oi.setSnippet("BB");
 		oi.setTitle("CC");
-		
+
 		GeoPoint point1 = new GeoPoint((int) (39.96387 * 1E6),
 				(int) (116.451264 * 1E6));
 		OverlayItem oi1 = new OverlayItem(point1, "laobian", "AA");
@@ -256,26 +267,43 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
-//		case R.id.fetch_location:
-			// if (!mLocationClient.isStarted()) {
-			// mLocationClient.start();
-			// return;
-			// }
-			// mLocationClient.requestLocation();
+		case R.id.tab_location:
+			if (mCurrentPoint != null) {
+				mMapView.getController().animateTo(mCurrentPoint);
+				return;
+			}
+			if (!mLocationClient.isStarted()) {
+				mLocationClient.start();
+				return;
+			}
+			mLocationClient.requestLocation();
 			/*
 			 * if (mLocationClient != null && mLocationClient.isStarted())
 			 * mLocationClient.requestPoi();
 			 */
-			// new Thread(new Runnable() {
-			//
-			// @Override
-			// public void run() {
-			// IWHttpsClient ic = new IWHttpsClient(MainActivity.this);
-			// test(ic);
-			// }
-			// }).start();
-			// break;
+			break;
+		case R.id.tab_satellite:
+			String flag = (String) v.getTag();
+			boolean show = "y".equals(flag);
+			mMapView.setSatellite(!show);
+			v.setTag(show ? "n" : "y");
+			if (v instanceof TextView) {
+				((TextView)v).setText(show ? "关闭卫星视图" : "查看卫星视图");
+			}
+			break;
+		case R.id.tab_traffic:
+			String flag_ = (String) v.getTag();
+			boolean show_ = "y".equals(flag_);
+			mMapView.setTraffic(!show_);
+			v.setTag(show_ ? "n" : "y");
+			if (v instanceof TextView) {
+				((TextView)v).setText(show_ ? "关闭实况交通" : "查看实况交通");
+			}
+			break;
+		case R.id.tab_nearly:
+			break;
 		}
+
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.roy.wolf.base;
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,11 +8,18 @@ import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.util.TypedValue;
 import android.view.TouchDelegate;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.baidu.mapapi.BMapManager;
 import com.roy.wolf.R;
 import com.roy.wolf.application.WolfApplication;
 
@@ -31,8 +39,14 @@ public abstract class BaseActivity extends FragmentActivity {
 
 	public View.OnClickListener clickListener = null;
 	public WolfApplication wapp = null;
+
+	public DrawerLayout drawerLayout = null;
+ 
+	public Context context;
 	
-	public Handler mHandler = new Handler() {
+	public boolean isInit = false;
+	
+	public Handler handler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -43,16 +57,54 @@ public abstract class BaseActivity extends FragmentActivity {
 	@Override
 	public void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
+		context = this;
 		fragmentManager = getSupportFragmentManager();
 		wapp = (WolfApplication) getApplication();
 	}
 
-	private void initTitleLayout() {
-		
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (!isInit) {
+			initDrawerLayout();
+			isInit = true;
+		}
+	}
+
+	public void initDrawerLayout() {
+		drawerLayout = (DrawerLayout) findViewById(R.id.normal_drawer_layout);
+		if (drawerLayout != null) {
+			initLeftMenu(drawerLayout);
+		}
 	}
 	
+	private void initLeftMenu(View v) {
+		ListView lv = (ListView) v.findViewById(R.id.left_drawer_list);
+		final String[] menu = getResources().getStringArray(R.array.base_left_menu_array);
+		MenuAdapter ma = new MenuAdapter(menu);
+		lv.setAdapter(ma);
+		lv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				Toast.makeText(context, menu[arg2], Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
+	public void closeTitleBack() {
+		View v = findViewById(R.id.normal_title_back);
+		if (v != null) {
+			v.setVisibility(View.INVISIBLE);
+		}
+	}
+
 	public void setTitleBack(View v) {
 		final View back = v.findViewById(R.id.normal_title_back);
+		if (back == null) {
+			return;
+		}
 		back.post(new Runnable() {
 
 			@Override
@@ -89,13 +141,19 @@ public abstract class BaseActivity extends FragmentActivity {
 	 * @param titleName
 	 */
 	public TextView setTitleInfo(String titleName) {
-		setTitleBack(findViewById(R.id.normal_title_layout));
-		TextView tv = (TextView) findViewById(R.id.normal_title_layout)
-				.findViewById(R.id.normal_title_name);
-		tv.setText(titleName);
-		return tv;
+		View v = findViewById(R.id.normal_title_layout);
+		if (v != null) {
+			setTitleBack(v);
+			TextView tv = (TextView) v.findViewById(R.id.normal_title_name);
+			if (tv != null) {
+				tv.setText(titleName);
+				return tv;
+			}
+		}
+
+		return null;
 	}
-	
+
 	/**
 	 * 初始化title name
 	 * 
@@ -105,8 +163,7 @@ public abstract class BaseActivity extends FragmentActivity {
 		String title = getString(titleId);
 		return setTitleInfo(title);
 	}
-	
-	
+
 	/**
 	 * 初始化title 右数第二个按钮
 	 * 
@@ -146,14 +203,18 @@ public abstract class BaseActivity extends FragmentActivity {
 	 * @param true = open，false = close
 	 */
 	public void switchTitleLoading(final boolean open) {
-		mHandler.post(new Runnable() {
+		handler.post(new Runnable() {
 
 			@Override
 			public void run() {
-				findViewById(R.id.normal_title_operate_loading).setVisibility(
-						open ? View.VISIBLE : View.GONE);
-				findViewById(R.id.normal_title_operate_layout).setVisibility(
-						!open ? View.VISIBLE : View.GONE);
+				View v = findViewById(R.id.normal_title_operate_loading);
+				View l = findViewById(R.id.normal_title_operate_layout);
+				if (v != null) {
+					v.setVisibility(open ? View.VISIBLE : View.GONE);
+				}
+				if (l != null) {
+					l.setVisibility(!open ? View.VISIBLE : View.GONE);
+				}
 			}
 		});
 
@@ -161,10 +222,16 @@ public abstract class BaseActivity extends FragmentActivity {
 
 	private TextView initTitleOperate(int operateId, int operateBG,
 			final boolean left) {
-		TextView tv = (TextView) findViewById(R.id.normal_title_layout)
-				.findViewById(
-						left ? R.id.normal_title_operate_left
-								: R.id.normal_title_operate_right);
+		View v = findViewById(R.id.normal_title_layout);
+		if (v == null) {
+			return null;
+		}
+		TextView tv = (TextView) v
+				.findViewById(left ? R.id.normal_title_operate_left
+						: R.id.normal_title_operate_right);
+		if (tv == null) {
+			return null;
+		}
 		if (operateId > 0) {
 			tv.setText(operateId);
 		}
@@ -189,5 +256,39 @@ public abstract class BaseActivity extends FragmentActivity {
 			return;
 		}
 		super.onBackPressed();
+	}
+	
+	class MenuAdapter extends BaseAdapter {
+
+		String[] menuList = null;
+		
+		public MenuAdapter(String[] menuList) {
+			this.menuList = menuList;
+		}
+		
+		@Override
+		public int getCount() {
+			return menuList.length;
+		}
+
+		@Override
+		public Object getItem(int arg0) {
+			return menuList[arg0];
+		}
+
+		@Override
+		public long getItemId(int arg0) {
+			return arg0;
+		}
+
+		@Override
+		public View getView(int p, View cv, ViewGroup vg) {
+			TextView item = new TextView(context);
+			item.setText(menuList[p]);
+			item.setTextColor(getResources().getColor(R.color.fuxk_base_color_black));
+			item.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+			return item;
+		}
+		
 	}
 }
