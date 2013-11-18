@@ -3,13 +3,17 @@ package com.roy.wolf.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,12 +38,16 @@ import com.igexin.slavesdk.MessageManager;
 import com.roy.wolf.R;
 import com.roy.wolf.application.WolfApplication;
 import com.roy.wolf.base.BaseActivity;
+import com.roy.wolf.fragment.SendActivityFragment;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 	private MapView mMapView;
 	private GeoPoint mCurrentPoint;
 	public LocationClient mLocationClient = null;
+	
+	private PopupOverlay popupOverlay = null;
+	
 	public BDLocationListener myListener = new BDLocationListener() {
 
 		@Override
@@ -118,7 +126,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 		@Override
 		public void onMapLongClick(GeoPoint arg0) {
-
+			showFragment("send_fragment", null, true);
 		}
 
 		@Override
@@ -225,31 +233,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		return option;
 	}
 
+	
+	
 	private void showFanPoint(final OverlayItem item) {
-		final PopupOverlay po1 = new PopupOverlay(mMapView, null);
+		popupOverlay = new PopupOverlay(mMapView, null);
 		View v = LayoutInflater.from(this).inflate(
 				R.layout.popup_show_operate_layout, null);
 		TextView name = (TextView) v.findViewById(R.id.shop_name);
 		TextView addr = (TextView) v.findViewById(R.id.shop_addr);
-		
+
 		name.setText(item.getTitle());
 		addr.setText(item.getSnippet());
-		
+
 		v.findViewById(R.id.pop_cancel).setOnClickListener(
 				new OnClickListener() {
 
 					@Override
 					public void onClick(View arg0) {
-						po1.hidePop();
+						popupOverlay.hidePop();
+						popupOverlay = null;
 					}
 				});
-		
+
 		v.findViewById(R.id.operate_0).setOnClickListener(
 				new OnClickListener() {
 
 					@Override
 					public void onClick(View arg0) {
-						po1.hidePop();
+						showFragment("send_fragment", null, true);
+						popupOverlay.hidePop();
+						popupOverlay = null;
 					}
 				});
 		v.findViewById(R.id.operate_1).setOnClickListener(
@@ -257,7 +270,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 					@Override
 					public void onClick(View arg0) {
-						po1.hidePop();
+						popupOverlay.hidePop();
+						popupOverlay = null;
 					}
 				});
 		v.findViewById(R.id.operate_2).setOnClickListener(
@@ -265,10 +279,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 					@Override
 					public void onClick(View arg0) {
-						po1.hidePop();
+						popupOverlay.hidePop();
+						popupOverlay = null;
 					}
 				});
-		po1.showPopup(v, item.getPoint(), 100);
+		popupOverlay.showPopup(v, item.getPoint(), 100);
 	}
 
 	class MyItemizedOverlay extends ItemizedOverlay<OverlayItem> {
@@ -311,7 +326,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 		GeoPoint point1 = new GeoPoint((int) (39.96387 * 1E6),
 				(int) (116.451264 * 1E6));
-		OverlayItem oi1 = new OverlayItem(point1, "老边饺子馆（三元桥店）", "地址：朝阳区左家庄东街静安里37号");
+		OverlayItem oi1 = new OverlayItem(point1, "老边饺子馆（三元桥店）",
+				"地址：朝阳区左家庄东街静安里37号");
 		GeoPoint point2 = new GeoPoint((int) (39.964858 * 1E6),
 				(int) (116.452512 * 1E6));
 		OverlayItem oi2 = new OverlayItem(point2, "蜀味居", "地址：朝阳区静安里1区5号临3号");
@@ -335,6 +351,55 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		mMapView.refresh();
 	}
 
+	public void showFragment(String tag, Bundle bundle, boolean open) {
+		if (open) {
+			showFragment(tag, bundle);
+		} else {
+			closeFragment(tag, bundle);
+		}
+	}
+
+	private void showFragment(String tag, Bundle bundle) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+		Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+		if (prev != null) {
+			ft.remove(prev);
+		}
+
+		ft.addToBackStack(null);
+
+		Fragment frag = createFragment(tag, bundle);
+		ft.replace(R.id.normal_extra_content_layout, frag, tag)
+				.commitAllowingStateLoss();
+	}
+
+	public Fragment createFragment(String tag, Bundle bundle) {
+		Fragment frag = null;
+		if (tag.equals("send_fragment")) {
+			frag = new SendActivityFragment(bundle);
+		}
+		return frag;
+	}
+
+	private void closeFragment(final String tag, final Bundle bundle) {
+		FragmentTransaction ft = fragmentManager.beginTransaction();
+		ft.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+		Fragment prev = fragmentManager.findFragmentByTag(tag);
+		if (prev != null) {
+			ft.remove(prev).commitAllowingStateLoss();
+		}
+		if (fragmentManager.getBackStackEntryCount() > 0) {
+			fragmentManager.popBackStackImmediate();
+		}
+
+		if (getCurrentFocus() != null) {
+			InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputmanger.hideSoftInputFromWindow(getCurrentFocus()
+					.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		}
+	}
+
 	@Override
 	protected void onDestroy() {
 		mMapView.destroy();
@@ -356,18 +421,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 	@Override
 	public void onBackPressed() {
-		List<Overlay> list = mMapView.getOverlays();
-		if (!list.isEmpty()) {
-			for (Overlay overlay : list) {
-				if (overlay instanceof PopupOverlay) {
-					((PopupOverlay)overlay).hidePop();
-					return;
-				}
-			}
+		if (popupOverlay != null) {
+			popupOverlay.hidePop();
+			popupOverlay = null;
+			return;
 		}
 		super.onBackPressed();
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();

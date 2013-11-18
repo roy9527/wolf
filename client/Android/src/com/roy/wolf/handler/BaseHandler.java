@@ -1,12 +1,14 @@
 package com.roy.wolf.handler;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -19,8 +21,8 @@ import com.roy.wolf.net.RoyHttpManager;
 import com.roy.wolf.net.RoyHttpManager.Request;
 
 public abstract class BaseHandler {
-	private static final String DOMAIN = "ap.ad140.com";
-	private static final String HTTP = "http://";
+	private static final String DOMAIN = "192.168.85.11:8682";
+	private static final String HTTP = "https://";
 	public String action = "";
 	public boolean isGet = false;
 	public Context context;
@@ -30,6 +32,8 @@ public abstract class BaseHandler {
 	private Request request = new Request();
 	private RoyHttpManager manager = null;
 	private JSONObject response;
+
+	public ArrayList<RequestPair> paramsList = new ArrayList<RequestPair>();
 
 	abstract protected void initRequest();
 
@@ -74,13 +78,13 @@ public abstract class BaseHandler {
 	}
 
 	public String initUrl() {
-		String url = HTTP + DOMAIN + "/" + action + "?";
+		String url = HTTP + DOMAIN + "/index.php?";
 		initRequest();
-		try {
-			url = url + mapToString(params);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			url = url + mapToString(params);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return url;
 	}
 

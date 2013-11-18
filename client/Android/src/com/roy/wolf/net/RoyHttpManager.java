@@ -9,6 +9,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -41,7 +42,7 @@ public class RoyHttpManager {
 	private Context context;
 	
 	public static class Request {
-		public boolean isGet = true;
+		public boolean isGet = false;
 		public String url = "";
 		public HttpEntity entity = null;
 		public RequestCallBack callBack = null;
