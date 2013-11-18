@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 	public LocationClient mLocationClient = null;
 	
 	private PopupOverlay popupOverlay = null;
+	private ArrayList<PopupOverlay> msgOverlays = null;
 	
 	public BDLocationListener myListener = new BDLocationListener() {
 
@@ -126,7 +128,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 		@Override
 		public void onMapLongClick(GeoPoint arg0) {
-			showFragment("send_fragment", null, true);
+			Bundle b = new Bundle();
+			b.putInt("Longitude", arg0.getLongitudeE6());
+			b.putInt("Latitude", arg0.getLatitudeE6());
+			showFragment("send_fragment", b, true);
 		}
 
 		@Override
@@ -175,8 +180,51 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		setContentView(R.layout.activity_main_layout);
 		MessageManager.getInstance().initialize(this.getApplicationContext());
 		init();
+		msgOverlays = new ArrayList<PopupOverlay>();
+		popMsg(getIntent());
 	}
 
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		popMsg(intent);
+	}
+
+	private void popMsg(Intent intent) {
+		showMsgPoint(intent);
+	}
+	
+	private void showMsgPoint(Intent intent) {
+		int l = intent.getIntExtra("Longitude", -1);
+		int t = intent.getIntExtra("Latitude", -1);
+		if (l == -1 || t == -1) {
+			return;
+		}
+		GeoPoint gp = new GeoPoint(l, t);
+		
+		final PopupOverlay popupOverlay = new PopupOverlay(mMapView, null);
+		
+		View v = LayoutInflater.from(this).inflate(
+				R.layout.popup_show_msg_layout, null);
+		TextView name = (TextView) v.findViewById(R.id.shop_name);
+		TextView addr = (TextView) v.findViewById(R.id.shop_addr);
+
+		name.setText(intent.getStringExtra("Title"));
+		addr.setText(intent.getStringExtra("Content"));
+
+		v.setOnClickListener(
+				new OnClickListener() {
+
+					@Override
+					public void onClick(View arg0) {
+						popupOverlay.hidePop();
+						msgOverlays.remove(popupOverlay);
+					}
+				});
+		msgOverlays.add(popupOverlay);
+		popupOverlay.showPopup(v, gp, 100);
+	}
+	
 	private void init() {
 		setTitleInfo(R.string.title_main);
 		mMapView = (MapView) findViewById(R.id.bmapsView);
@@ -260,7 +308,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 					@Override
 					public void onClick(View arg0) {
-						showFragment("send_fragment", null, true);
+						int t = item.getPoint().getLatitudeE6();
+						int l = item.getPoint().getLongitudeE6();
+						Bundle b = new Bundle();
+						b.putInt("Longitude", l);
+						b.putInt("Latitude", t);
+						showFragment("send_fragment", b, true);
 						popupOverlay.hidePop();
 						popupOverlay = null;
 					}

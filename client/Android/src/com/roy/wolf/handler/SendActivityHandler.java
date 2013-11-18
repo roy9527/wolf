@@ -14,15 +14,17 @@ public class SendActivityHandler extends BaseHandler {
 
 	private String msg = "";
 	private String title = "";
-
+	private String cod = "";
+	
 	public SendActivityHandler(Context context) {
 		super(context);
 		this.action = "push";
 	}
 
-	public void setParams(String title, String msg) {
+	public void setParams(String title, String msg, String cod) {
 		this.title = title;
 		this.msg = msg;
+		this.cod = cod;
 	}
 	
 	@Override
@@ -30,6 +32,16 @@ public class SendActivityHandler extends BaseHandler {
 		paramsList.add(new RequestPair("msg", msg));
 		paramsList.add(new RequestPair("act", "push"));
 		paramsList.add(new RequestPair("title", title));
+		try {
+			JSONObject jo = new JSONObject();
+			for (RequestPair pair : paramsList) {
+				jo.put(pair.getName(), pair.getValue());
+			}
+			jo.put("cod", cod);
+			paramsList.add(new RequestPair("cod", jo.toString()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
