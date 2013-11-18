@@ -1,12 +1,15 @@
 package com.roy.wolf.activity;
 
-import android.content.Intent;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,20 +19,21 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.ItemizedOverlay;
 import com.baidu.mapapi.map.LocationData;
+import com.baidu.mapapi.map.MKMapStatus;
+import com.baidu.mapapi.map.MKMapTouchListener;
 import com.baidu.mapapi.map.MKMapViewListener;
 import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
+import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayItem;
-import com.baidu.mapapi.map.PopupClickListener;
 import com.baidu.mapapi.map.PopupOverlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.igexin.slavesdk.MessageManager;
 import com.roy.wolf.R;
 import com.roy.wolf.application.WolfApplication;
 import com.roy.wolf.base.BaseActivity;
-import com.roy.wolf.guanzi.GuanZiActivity;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -110,6 +114,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		}
 	};
 
+	private MKMapTouchListener mapTouchListener = new MKMapTouchListener() {
+
+		@Override
+		public void onMapLongClick(GeoPoint arg0) {
+
+		}
+
+		@Override
+		public void onMapDoubleClick(GeoPoint arg0) {
+
+		}
+
+		@Override
+		public void onMapClick(GeoPoint arg0) {
+
+		}
+	};
+
 	private MKMapViewListener mapViewListener = new MKMapViewListener() {
 
 		@Override
@@ -152,6 +174,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		mMapView = (MapView) findViewById(R.id.bmapsView);
 		mMapView.setBuiltInZoomControls(true);
 		mMapView.regMapViewListener(wapp.mBMapManager, mapViewListener);
+		mMapView.regMapTouchListner(mapTouchListener);
 		mLocationClient = new LocationClient(getApplicationContext());
 		mLocationClient.setAK(WolfApplication.strKey);
 		mLocationClient.registerLocationListener(myListener);
@@ -159,7 +182,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		initCenter();
 		switchTitleLoading(true);
 		mLocationClient.start();
-		// findViewById(R.id.fetch_location).setOnClickListener(this);
 		showFanPoint(1);
 		initBottomTab();
 	}
@@ -171,11 +193,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 			l.getChildAt(i).setOnClickListener(this);
 		}
 	}
-	
+
 	private void initCenter() {
 		MapController mMapController = mMapView.getController();
-		mMapController.setCenter(getPoint(-1));// 设置地图中心点
-		mMapController.setZoom(14);// 设置地图zoom级别
+		MKMapStatus status = new MKMapStatus();
+		status.targetGeo = getPoint(-1);
+		status.zoom = mMapView.getMaxZoomLevel();
+		mMapController.setMapStatusWithAnimation(status);
+		mMapController.setCompassMargin(50, 200);
 	}
 
 	private GeoPoint getPoint(int index) {
@@ -200,46 +225,112 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		return option;
 	}
 
-	private void showFanPoint() {
-		PopupOverlay po1 = new PopupOverlay(mMapView, new PopupClickListener() {
+	private void showFanPoint(final OverlayItem item) {
+		final PopupOverlay po1 = new PopupOverlay(mMapView, null);
+		View v = LayoutInflater.from(this).inflate(
+				R.layout.popup_show_operate_layout, null);
+		TextView name = (TextView) v.findViewById(R.id.shop_name);
+		TextView addr = (TextView) v.findViewById(R.id.shop_addr);
+		
+		name.setText(item.getTitle());
+		addr.setText(item.getSnippet());
+		
+		v.findViewById(R.id.pop_cancel).setOnClickListener(
+				new OnClickListener() {
 
-			@Override
-			public void onClickedPopup(int arg0) {
-				Intent i = new Intent(MainActivity.this, GuanZiActivity.class);
-				startActivity(i);
-			}
-		});
-		ImageView tv = new ImageView(this);
-		tv.setImageResource(R.drawable.sailiya);
-		GeoPoint point = new GeoPoint((int) (39.964675 * 1E6),
-				(int) (116.448874 * 1E6));
-		po1.showPopup(tv, point, 10);
+					@Override
+					public void onClick(View arg0) {
+						po1.hidePop();
+					}
+				});
+		
+		v.findViewById(R.id.operate_0).setOnClickListener(
+				new OnClickListener() {
+
+					@Override
+					public void onClick(View arg0) {
+						po1.hidePop();
+					}
+				});
+		v.findViewById(R.id.operate_1).setOnClickListener(
+				new OnClickListener() {
+
+					@Override
+					public void onClick(View arg0) {
+						po1.hidePop();
+					}
+				});
+		v.findViewById(R.id.operate_2).setOnClickListener(
+				new OnClickListener() {
+
+					@Override
+					public void onClick(View arg0) {
+						po1.hidePop();
+					}
+				});
+		po1.showPopup(v, item.getPoint(), 100);
+	}
+
+	class MyItemizedOverlay extends ItemizedOverlay<OverlayItem> {
+
+		public MyItemizedOverlay(Drawable arg0, MapView arg1) {
+			super(arg0, arg1);
+		}
+
+		@Override
+		public boolean onTap(GeoPoint arg0, MapView arg1) {
+			Log.d("Wolf", arg0.toString());
+			return super.onTap(arg0, arg1);
+		}
+
+		@Override
+		protected boolean onTap(int arg0) {
+			Log.d("Wolf", arg0 + "");
+			OverlayItem oi = (OverlayItem) getItem(arg0);
+			GeoPoint gp = oi.getPoint();
+			mMapView.getController().animateTo(gp);
+			mMapView.getController().setZoom(mMapView.getMaxZoomLevel());
+			showFanPoint(oi);
+			return true;
+		}
+
 	}
 
 	// 116.452512,39.964858 大串
 	// 116.446408,39.964561 麦当劳
-	// 116.445833,39.968145 太熟悉
+	// 116.447284,39.966182 管式
 	private void showFanPoint(int index) {
 		Drawable d = getResources().getDrawable(R.drawable.boss);
-		Drawable d1 = getResources().getDrawable(R.drawable.yt);
-		ItemizedOverlay io = new ItemizedOverlay<OverlayItem>(null, mMapView);
+
+		ArrayList<OverlayItem> list = new ArrayList<OverlayItem>();
+
+		MyItemizedOverlay io = new MyItemizedOverlay(d, mMapView);
 		GeoPoint point = new GeoPoint((int) (39.964675 * 1E6),
 				(int) (116.448874 * 1E6));
-		OverlayItem oi = new OverlayItem(point, "saliya", "AA");
-		oi.setMarker(d);
-		oi.setAnchor(OverlayItem.ALIGN_BOTTON);
-		oi.setSnippet("BB");
-		oi.setTitle("CC");
+		OverlayItem oi = new OverlayItem(point, "萨莉亚意式餐厅", "地址：朝阳区左家庄东街天虹百货2楼");
 
 		GeoPoint point1 = new GeoPoint((int) (39.96387 * 1E6),
 				(int) (116.451264 * 1E6));
-		OverlayItem oi1 = new OverlayItem(point1, "laobian", "AA");
-		oi1.setMarker(d1);
-		oi1.setAnchor(OverlayItem.ALIGN_BOTTON);
-		oi1.setSnippet("BB");
-		oi1.setTitle("CC");
-		io.addItem(oi1);
-		io.addItem(oi);
+		OverlayItem oi1 = new OverlayItem(point1, "老边饺子馆（三元桥店）", "地址：朝阳区左家庄东街静安里37号");
+		GeoPoint point2 = new GeoPoint((int) (39.964858 * 1E6),
+				(int) (116.452512 * 1E6));
+		OverlayItem oi2 = new OverlayItem(point2, "蜀味居", "地址：朝阳区静安里1区5号临3号");
+
+		GeoPoint point3 = new GeoPoint((int) (39.964561 * 1E6),
+				(int) (116.446408 * 1E6));
+		OverlayItem oi3 = new OverlayItem(point3, "麦当劳(左家庄餐厅)", "地址：朝阳区左家庄北里2号");
+
+		GeoPoint point4 = new GeoPoint((int) (39.966182 * 1E6),
+				(int) (116.447284 * 1E6));
+		OverlayItem oi4 = new OverlayItem(point4, "管记翅吧(国展店)", "地址：朝阳区北三环东路8");
+
+		list.add(oi);
+		list.add(oi1);
+		list.add(oi2);
+		list.add(oi3);
+		list.add(oi4);
+		io.addItem(list);
+
 		mMapView.getOverlays().add(io);
 		mMapView.refresh();
 	}
@@ -264,6 +355,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 	}
 
 	@Override
+	public void onBackPressed() {
+		List<Overlay> list = mMapView.getOverlays();
+		if (!list.isEmpty()) {
+			for (Overlay overlay : list) {
+				if (overlay instanceof PopupOverlay) {
+					((PopupOverlay)overlay).hidePop();
+					return;
+				}
+			}
+		}
+		super.onBackPressed();
+	}
+	
+	@Override
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
@@ -277,10 +382,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 				return;
 			}
 			mLocationClient.requestLocation();
-			/*
-			 * if (mLocationClient != null && mLocationClient.isStarted())
-			 * mLocationClient.requestPoi();
-			 */
 			break;
 		case R.id.tab_satellite:
 			String flag = (String) v.getTag();
@@ -288,7 +389,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 			mMapView.setSatellite(!show);
 			v.setTag(show ? "n" : "y");
 			if (v instanceof TextView) {
-				((TextView)v).setText(show ? "关闭卫星视图" : "查看卫星视图");
+				((TextView) v).setText(!show ? "关闭卫星视图" : "查看卫星视图");
 			}
 			break;
 		case R.id.tab_traffic:
@@ -297,7 +398,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 			mMapView.setTraffic(!show_);
 			v.setTag(show_ ? "n" : "y");
 			if (v instanceof TextView) {
-				((TextView)v).setText(show_ ? "关闭实况交通" : "查看实况交通");
+				((TextView) v).setText(!show_ ? "关闭实况交通" : "查看实况交通");
 			}
 			break;
 		case R.id.tab_nearly:

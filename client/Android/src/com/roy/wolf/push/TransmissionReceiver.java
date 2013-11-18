@@ -20,7 +20,7 @@ public class TransmissionReceiver extends BroadcastReceiver {
 			byte[] payload = bundle.getByteArray("payload");
 			if (payload != null) {
 				String data = new String(payload);
-				Log.d("GexinSdkDemo", "Got Payload:" + data);
+				Log.d("Wolf", "Got Payload:" + data);
 				// TODO:接收处理透传(payload)数据
 			}
 			break;

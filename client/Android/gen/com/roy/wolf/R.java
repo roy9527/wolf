@@ -289,7 +289,7 @@ public final class R {
         public static final int yt=0x7f020019;
     }
     public static final class id {
-        public static final int action_settings=0x7f0b006c;
+        public static final int action_settings=0x7f0b0073;
         public static final int app_logo=0x7f0b0022;
         public static final int app_logo_province=0x7f0b0023;
         public static final int app_name=0x7f0b0024;
@@ -348,7 +348,11 @@ public final class R {
         public static final int notification_update_icon=0x7f0b005d;
         public static final int notification_update_text=0x7f0b005e;
         public static final int notification_version=0x7f0b0059;
+        public static final int operate_0=0x7f0b0070;
+        public static final int operate_1=0x7f0b0071;
+        public static final int operate_2=0x7f0b0072;
         public static final int other_operation=0x7f0b0030;
+        public static final int pop_cancel=0x7f0b006c;
         public static final int rec_install1=0x7f0b003a;
         public static final int rec_install2=0x7f0b0040;
         public static final int rec_install3=0x7f0b0046;
@@ -376,6 +380,9 @@ public final class R {
         public static final int setup_layout=0x7f0b0066;
         public static final int setup_message=0x7f0b0069;
         public static final int setup_text=0x7f0b006b;
+        public static final int shop_addr=0x7f0b006f;
+        public static final int shop_logo=0x7f0b006d;
+        public static final int shop_name=0x7f0b006e;
         public static final int status=0x7f0b0060;
         public static final int status1=0x7f0b003c;
         public static final int status2=0x7f0b0042;
@@ -411,6 +418,7 @@ public final class R {
         public static final int item_menu_layout=0x7f030008;
         public static final int notification=0x7f030009;
         public static final int notification_inc=0x7f03000a;
+        public static final int popup_show_operate_layout=0x7f03000b;
     }
     public static final class menu {
         public static final int main=0x7f0a0000;

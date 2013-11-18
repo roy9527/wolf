@@ -11,7 +11,7 @@ import com.roy.wolf.model.UserInfoEntry;
 
 public class WolfApplication extends Application {
 
-	public static final String strKey = "BF44af346e565086ac18568b011369c4";
+	public static final String strKey = "C12fe738d81c558952faa3896af365e3";
 
 	public boolean m_bKeyRight = true;
 	public BMapManager mBMapManager = null;
