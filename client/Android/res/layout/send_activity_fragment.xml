@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/fuxk_base_color_white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/dd_dimen_30px" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                style="@style/TextViewStyleBig"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/send_cancel"
+                android:hint="发个活动广播~ 大家来抱团~"
+                android:singleLine="true" />
+
+            <ImageView
+                android:id="@+id/send_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="@dimen/dd_dimen_15px"
+                android:scaleType="centerCrop"
+                android:src="@drawable/fuxk_cancel" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/send_msg_title"
+            style="@style/TextViewStyleMiddle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dd_dimen_15px"
+            android:hint="起个标题"
+            android:maxLength="20"
+            android:imeOptions="actionNext"
+            android:singleLine="true" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="@dimen/dd_dimen_10px"
+            android:background="@color/fuxk_base_divide_line_color" />
+
+        <EditText
+            android:id="@+id/send_msg_msg"
+            style="@style/TextViewStyleMiddle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dd_dimen_10px"
+            android:hint="加些内容"
+            android:imeOptions="actionSend"
+            android:maxHeight="@dimen/dd_dimen_200px"
+            android:maxLength="70"
+            android:minHeight="@dimen/dd_dimen_200px"
+            android:singleLine="true" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="@dimen/dd_dimen_10px"
+            android:background="@color/fuxk_base_divide_line_color" />
+
+        <TextView
+            android:id="@+id/send_ok"
+            style="@style/TextViewStyleBig"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dd_dimen_100px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dd_dimen_20px"
+            android:background="#80aaaaaa"
+            android:drawablePadding="@dimen/dd_dimen_20px"
+            android:drawableRight="@drawable/fuxk_ok"
+            android:gravity="center"
+            android:text="Go Go 发射~"
+            android:padding="@dimen/dd_dimen_15px"
+            android:singleLine="true" />
+    </LinearLayout>
+
+</LinearLayout>

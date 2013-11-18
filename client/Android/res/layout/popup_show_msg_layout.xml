@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/fuxk_base_color_white_"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/dd_dimen_30px" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/pop_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:padding="@dimen/dd_dimen_15px"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/fuxk_cancel" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/shop_logo"
+            android:layout_width="@dimen/dd_dimen_100px"
+            android:layout_height="@dimen/dd_dimen_100px"
+            android:scaleType="center"
+            android:src="@drawable/wh" />
+
+        <TextView
+            android:id="@+id/shop_name"
+            style="@style/TextViewStyleBig"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/shop_logo"
+            android:layout_marginLeft="@dimen/dd_dimen_5px"
+            android:layout_toRightOf="@+id/shop_logo"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="你大爷的shop" />
+
+        <TextView
+            android:id="@+id/shop_addr"
+            style="@style/TextViewStyleBig"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/shop_logo"
+            android:layout_marginLeft="@dimen/dd_dimen_5px"
+            android:layout_marginTop="@dimen/dd_dimen_5px"
+            android:layout_toRightOf="@+id/shop_logo"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="你大爷的地址" />
+    </RelativeLayout>
+
+</LinearLayout>
