@@ -54,6 +54,11 @@
             android:name="com.roy.wolf.activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop" >
+        </activity>
+        <activity
+            android:name="com.roy.wolf.activity.SplashActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -140,7 +145,6 @@
             android:process="com.roy.wolf.pushservice" />
 
         <receiver android:name="com.roy.wolf.push.TransmissionReceiver" >
-
             <intent-filter>
                 <action android:name="com.igexin.sdk.action.EwYJzIXL9Y8nitIeSgrfJ2" />
             </intent-filter>
