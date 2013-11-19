@@ -11,6 +11,8 @@ import android.util.Log;
 
 import com.igexin.sdk.Consts;
 import com.roy.wolf.activity.MainActivity;
+import com.roy.wolf.model.EventEntry;
+import com.roy.wolf.model.PointEntry;
 
 public class TransmissionReceiver extends BroadcastReceiver {
 
@@ -19,26 +21,30 @@ public class TransmissionReceiver extends BroadcastReceiver {
 		Bundle bundle = intent.getExtras();
 		switch (bundle.getInt(Consts.CMD_ACTION)) {
 		case Consts.GET_MSG_DATA:
-			Log.d("Wolf1", "Got Payload");
-			// 获取透传(payload)数据
 			byte[] payload = bundle.getByteArray("payload");
 			if (payload != null) {
 				String data = new String(payload);
 				Log.d("Wolf1", "Got Payload:" + data);
-				// TODO:接收处理透传(payload)数据
 				try {
 					JSONObject jo = new JSONObject(data);
+					EventEntry entry = new EventEntry();
 					Intent i = new Intent(arg0, MainActivity.class);
-					i.putExtra("Title", jo.optString("title"));
-					i.putExtra("Content", jo.optString("msg"));
+					
+					entry.title = jo.optString("title");
+					entry.content = jo.optString("msg");
+					entry.date = jo.optString("date");
+					
 					String cod = jo.optString("cod");
 					if (!TextUtils.isEmpty(cod)) {
 						String[] t = cod.split("/");
 						int l = Integer.valueOf(t[0]);
 						int tt = Integer.valueOf(t[1]);
-						i.putExtra("Longitude", l);
-						i.putExtra("Latitude", tt);
+						PointEntry point = new PointEntry();
+						point.latitude = tt;
+						point.longtitude = l;
+						entry.point = point;
 					}
+					i.putExtra("Event", entry);
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					arg0.startActivity(i);
 				} catch (Exception e) {

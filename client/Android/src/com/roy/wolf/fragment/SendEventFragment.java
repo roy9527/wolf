@@ -16,13 +16,13 @@ import com.roy.wolf.activity.MainActivity;
 import com.roy.wolf.handler.SendActivityHandler;
 import com.roy.wolf.net.RequestListener;
 
-public class SendActivityFragment extends Fragment {
+public class SendEventFragment extends Fragment {
 
 	private View view;
 
 	Bundle bundle;
 
-	public SendActivityFragment(Bundle bundle) {
+	public SendEventFragment(Bundle bundle) {
 		this.bundle = bundle;
 	}
 

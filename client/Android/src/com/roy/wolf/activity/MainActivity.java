@@ -1,7 +1,8 @@
 package com.roy.wolf.activity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +15,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -31,7 +36,6 @@ import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
-import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.mapapi.map.PopupOverlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
@@ -39,17 +43,23 @@ import com.igexin.slavesdk.MessageManager;
 import com.roy.wolf.R;
 import com.roy.wolf.application.WolfApplication;
 import com.roy.wolf.base.BaseActivity;
-import com.roy.wolf.fragment.SendActivityFragment;
+import com.roy.wolf.fragment.SendEventFragment;
+import com.roy.wolf.model.Entry;
+import com.roy.wolf.model.EventEntry;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 	private MapView mMapView;
 	private GeoPoint mCurrentPoint;
 	public LocationClient mLocationClient = null;
-	
+
 	private PopupOverlay popupOverlay = null;
 	private ArrayList<PopupOverlay> msgOverlays = null;
-	
+
+	private ListView eventList;
+	private ArrayList<Entry> events = null;
+	private EventAdapter eventAdapter = null;
+
 	public BDLocationListener myListener = new BDLocationListener() {
 
 		@Override
@@ -193,40 +203,42 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 	private void popMsg(Intent intent) {
 		showMsgPoint(intent);
 	}
-	
+
 	private void showMsgPoint(Intent intent) {
-		int l = intent.getIntExtra("Longitude", -1);
-		int t = intent.getIntExtra("Latitude", -1);
-		if (l == -1 || t == -1) {
+		EventEntry entry = (EventEntry) intent.getSerializableExtra("Event");
+		if (entry == null) {
 			return;
 		}
-		GeoPoint gp = new GeoPoint(l, t);
-		
 		final PopupOverlay popupOverlay = new PopupOverlay(mMapView, null);
-		
-		View v = LayoutInflater.from(this).inflate(
+
+		final View v = LayoutInflater.from(this).inflate(
 				R.layout.popup_show_msg_layout, null);
 		TextView name = (TextView) v.findViewById(R.id.shop_name);
 		TextView addr = (TextView) v.findViewById(R.id.shop_addr);
 
-		name.setText(intent.getStringExtra("Title"));
-		addr.setText(intent.getStringExtra("Content"));
+		name.setText(entry.title);
+		addr.setText(entry.content);
 
-		v.setOnClickListener(
-				new OnClickListener() {
+		v.setOnClickListener(new OnClickListener() {
 
-					@Override
-					public void onClick(View arg0) {
-						popupOverlay.hidePop();
-						msgOverlays.remove(popupOverlay);
-					}
-				});
+			@Override
+			public void onClick(View arg0) {
+				popupOverlay.hidePop();
+				msgOverlays.remove(popupOverlay);
+			}
+		});
 		msgOverlays.add(popupOverlay);
-		popupOverlay.showPopup(v, gp, 100);
+		popupOverlay.showPopup(v, new GeoPoint(entry.point.latitude,
+				entry.point.longtitude), 100);
+		eventAdapter.add(entry);
 	}
-	
+
 	private void init() {
 		setTitleInfo(R.string.title_main);
+		eventList = (ListView) findViewById(R.id.event_list);
+		eventAdapter = new EventAdapter(this);
+		eventList.setAdapter(eventAdapter);
+
 		mMapView = (MapView) findViewById(R.id.bmapsView);
 		mMapView.setBuiltInZoomControls(true);
 		mMapView.regMapViewListener(wapp.mBMapManager, mapViewListener);
@@ -281,8 +293,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		return option;
 	}
 
-	
-	
 	private void showFanPoint(final OverlayItem item) {
 		popupOverlay = new PopupOverlay(mMapView, null);
 		View v = LayoutInflater.from(this).inflate(
@@ -430,7 +440,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 	public Fragment createFragment(String tag, Bundle bundle) {
 		Fragment frag = null;
 		if (tag.equals("send_fragment")) {
-			frag = new SendActivityFragment(bundle);
+			frag = new SendEventFragment(bundle);
 		}
 		return frag;
 	}
@@ -524,5 +534,49 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 	@Override
 	public void setTitleOperate(TITLE_OPERATE operate) {
 
+	}
+
+	class EventAdapter extends ArrayAdapter<Entry> {
+
+		public EventAdapter(Context context) {
+			super(context, 0);
+		}
+
+		public void add(ArrayList<Entry> list) {
+			synchronized (list) {
+				for (Entry entry : list) {
+					add(entry);
+				}
+			}
+		}
+
+		@Override
+		public View getView(int position, View cv, ViewGroup parent) {
+			Entry entry = getItem(position);
+			EventEntry ee = (EventEntry) entry;
+			if (cv == null) {
+				cv = LayoutInflater.from(context).inflate(
+						R.layout.item_event_layout, null);
+				ViewHolder holder = new ViewHolder();
+				holder.logo = (ImageView) cv.findViewById(R.id.event_logo);
+				holder.title = (TextView) cv.findViewById(R.id.event_t);
+				holder.content = (TextView) cv.findViewById(R.id.event_c);
+				holder.date = (TextView) cv.findViewById(R.id.event_d);
+				cv.setTag(holder);
+			}
+			ViewHolder holder = (ViewHolder) cv.getTag();
+			holder.title.setText(ee.title);
+			holder.content.setText(ee.content);
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String date = format.format(new Date());
+//			holder.date.setText(ee.date);
+			holder.date.setText(date);
+			return cv;
+		}
+
+		class ViewHolder {
+			ImageView logo;
+			TextView title, content, date;
+		}
 	}
 }
