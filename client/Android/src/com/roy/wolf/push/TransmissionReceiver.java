@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -108,13 +109,16 @@ public class TransmissionReceiver extends BroadcastReceiver {
 		Notification notification = new Notification(R.drawable.wolf_alarms, entry.content, time);
 		notification.tickerText = entry.content;
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		notification.defaults |= Notification.DEFAULT_SOUND;
 		notification.defaults |= Notification.DEFAULT_LIGHTS;
 		notification.ledARGB = 0xff00ff00;
 		notification.ledOnMS = 300;
 		notification.ledOffMS = 1000;
 		notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-
+		try {
+			notification.sound = Uri.parse("android.resource://" + context.getPackageName() + "/" +R.raw.bee_do);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		int id = (int) (time % 10000);
 		Intent intent = new Intent(context, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

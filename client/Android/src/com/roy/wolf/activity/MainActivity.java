@@ -1,5 +1,6 @@
 package com.roy.wolf.activity;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +11,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -55,7 +59,7 @@ import com.roy.wolf.model.EventEntry;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 	private final static String EVENT_PUSH_ACTION = "com.roy.wolf.event_push_action";
-	
+
 	private MapView mMapView;
 	private GeoPoint mCurrentPoint;
 	public LocationClient mLocationClient = null;
@@ -68,7 +72,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 	private EventAdapter eventAdapter = null;
 
 	private DrawerLayout drawerLayout;
-	
+
 	public BDLocationListener myListener = new BDLocationListener() {
 
 		@Override
@@ -194,16 +198,32 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 	};
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
-		
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String a = intent.getAction();
 			if (a.equals(EVENT_PUSH_ACTION)) {
+				MediaPlayer mp = MediaPlayer.create(context, R.raw.bee_do);
+				mp.setOnCompletionListener(new OnCompletionListener() {
+					
+					@Override
+					public void onCompletion(MediaPlayer arg0) {
+						arg0.release();
+					}
+				});
+				try {
+					mp.prepare();
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				mp.start();
 				showMsgPoint(intent, false);
 			}
 		}
 	};
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -263,7 +283,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		setTitleInfo(R.string.title_main);
 		eventList = (ListView) findViewById(R.id.event_list);
 		drawerLayout = (DrawerLayout) findViewById(R.id.normal_drawer_layout);
-		
+
 		eventAdapter = new EventAdapter(this);
 		eventList.setAdapter(eventAdapter);
 		eventList.setOnItemClickListener(new OnItemClickListener() {
@@ -277,7 +297,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 				showMsgPoint(entry, true);
 			}
 		});
-		
+
 		mMapView = (MapView) findViewById(R.id.bmapsView);
 		mMapView.setBuiltInZoomControls(true);
 		mMapView.regMapViewListener(wapp.mBMapManager, mapViewListener);
