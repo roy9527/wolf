@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/event_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dd_dimen_20px"
+        android:scaleType="centerInside"
+        android:src="@drawable/wolf_alarms" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/dd_dimen_20px" >
+
+        <TextView
+            android:id="@+id/event_t"
+            style="@style/TextViewStyleMiddle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="这是标题" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/event_c"
+            style="@style/TextViewStyleMiddle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dd_dimen_5px"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="这是内容" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/event_d"
+            style="@style/TextViewStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dd_dimen_5px"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="这是时间" >
+        </TextView>
+    </LinearLayout>
+
+</LinearLayout>

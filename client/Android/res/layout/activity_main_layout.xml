@@ -39,6 +39,11 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:paddingTop="@dimen/dd_dimen_96px" >
+
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/fragment_event_list_layout" />
         </FrameLayout>
     </android.support.v4.widget.DrawerLayout>
 
