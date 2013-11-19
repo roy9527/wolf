@@ -4,19 +4,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,6 +54,8 @@ import com.roy.wolf.model.EventEntry;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
+	private final static String EVENT_PUSH_ACTION = "com.roy.wolf.event_push_action";
+	
 	private MapView mMapView;
 	private GeoPoint mCurrentPoint;
 	public LocationClient mLocationClient = null;
@@ -60,6 +67,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 	private ArrayList<Entry> events = null;
 	private EventAdapter eventAdapter = null;
 
+	private DrawerLayout drawerLayout;
+	
 	public BDLocationListener myListener = new BDLocationListener() {
 
 		@Override
@@ -184,31 +193,46 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 		}
 	};
 
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String a = intent.getAction();
+			if (a.equals(EVENT_PUSH_ACTION)) {
+				showMsgPoint(intent, false);
+			}
+		}
+	};
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_layout);
 		MessageManager.getInstance().initialize(this.getApplicationContext());
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(EVENT_PUSH_ACTION);
+		registerReceiver(receiver, filter);
 		init();
 		msgOverlays = new ArrayList<PopupOverlay>();
-		popMsg(getIntent());
+		showMsgPoint(getIntent(), true);
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		popMsg(intent);
+		showMsgPoint(intent, true);
 	}
 
-	private void popMsg(Intent intent) {
-		showMsgPoint(intent);
-	}
-
-	private void showMsgPoint(Intent intent) {
+	private void showMsgPoint(Intent intent, boolean move) {
 		EventEntry entry = (EventEntry) intent.getSerializableExtra("Event");
 		if (entry == null) {
 			return;
 		}
+		showMsgPoint(entry, move);
+		eventAdapter.add(entry);
+	}
+
+	private void showMsgPoint(EventEntry entry, boolean move) {
 		final PopupOverlay popupOverlay = new PopupOverlay(mMapView, null);
 
 		final View v = LayoutInflater.from(this).inflate(
@@ -227,18 +251,33 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 				msgOverlays.remove(popupOverlay);
 			}
 		});
+		GeoPoint p = new GeoPoint(entry.point.latitude, entry.point.longtitude);
 		msgOverlays.add(popupOverlay);
-		popupOverlay.showPopup(v, new GeoPoint(entry.point.latitude,
-				entry.point.longtitude), 100);
-		eventAdapter.add(entry);
+		popupOverlay.showPopup(v, p, 100);
+		if (move) {
+			mMapView.getController().animateTo(p);
+		}
 	}
 
 	private void init() {
 		setTitleInfo(R.string.title_main);
 		eventList = (ListView) findViewById(R.id.event_list);
+		drawerLayout = (DrawerLayout) findViewById(R.id.normal_drawer_layout);
+		
 		eventAdapter = new EventAdapter(this);
 		eventList.setAdapter(eventAdapter);
+		eventList.setOnItemClickListener(new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				drawerLayout.closeDrawers();
+				EventEntry entry = (EventEntry) eventList
+						.getItemAtPosition(arg2);
+				showMsgPoint(entry, true);
+			}
+		});
+		
 		mMapView = (MapView) findViewById(R.id.bmapsView);
 		mMapView.setBuiltInZoomControls(true);
 		mMapView.regMapViewListener(wapp.mBMapManager, mapViewListener);
@@ -465,8 +504,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 	@Override
 	protected void onDestroy() {
+		wapp.mainLive = 0;
 		mMapView.destroy();
 		mLocationClient.stop();
+		unregisterReceiver(receiver);
 		super.onDestroy();
 	}
 
@@ -479,6 +520,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 	@Override
 	protected void onResume() {
 		mMapView.onResume();
+		wapp.mainLive = 1;
 		super.onResume();
 	}
 
@@ -538,6 +580,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 	class EventAdapter extends ArrayAdapter<Entry> {
 
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 		public EventAdapter(Context context) {
 			super(context, 0);
 		}
@@ -567,9 +611,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 			ViewHolder holder = (ViewHolder) cv.getTag();
 			holder.title.setText(ee.title);
 			holder.content.setText(ee.content);
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String date = format.format(new Date());
-//			holder.date.setText(ee.date);
+			String date = format.format(new Date(ee.date));
+			// TODO update
+			// holder.date.setText(ee.date);
 			holder.date.setText(date);
 			return cv;
 		}

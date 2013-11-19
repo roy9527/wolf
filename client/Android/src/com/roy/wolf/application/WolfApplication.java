@@ -2,6 +2,7 @@ package com.roy.wolf.application;
 
 import android.app.Application;
 import android.content.Context;
+import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
 import com.baidu.mapapi.BMapManager;
@@ -18,12 +19,25 @@ public class WolfApplication extends Application {
 
 	public UserInfoEntry userInfo = new UserInfoEntry();
 	
+	public int mainLive = 0;
+	
+	public String imei = "";
+	public String phone = "";
+	public String cid = "";
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		initEngineManager(this);
+		init();
 	}
 
+	private void init() {
+		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		imei = tm.getDeviceId();
+		phone = "" + tm.getLine1Number();
+	}
+	
 	public void initEngineManager(Context context) {
 		if (mBMapManager == null) {
 			mBMapManager = new BMapManager(context);

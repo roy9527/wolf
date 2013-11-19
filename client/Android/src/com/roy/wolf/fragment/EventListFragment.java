@@ -13,7 +13,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.roy.wolf.R;
 import com.roy.wolf.activity.MainActivity;
-import com.roy.wolf.handler.SendActivityHandler;
+import com.roy.wolf.handler.SendEventHandler;
 import com.roy.wolf.net.RequestListener;
 
 public class EventListFragment extends Fragment {
@@ -60,7 +60,7 @@ public class EventListFragment extends Fragment {
 
 						String t = title.getText().toString();
 						String m = msg.getText().toString();
-						SendActivityHandler sah = new SendActivityHandler(
+						SendEventHandler sah = new SendEventHandler(
 								getActivity());
 						String cod = bundle.getInt("Longitude") + "/" + bundle.getInt("Latitude");
 						sah.setParams(t, m, cod);

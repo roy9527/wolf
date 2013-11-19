@@ -10,13 +10,13 @@ import android.util.Log;
 
 import com.roy.wolf.model.Entry;
 
-public class SendActivityHandler extends BaseHandler {
+public class SendEventHandler extends BaseHandler {
 
 	private String msg = "";
 	private String title = "";
 	private String cod = "";
 	
-	public SendActivityHandler(Context context) {
+	public SendEventHandler(Context context) {
 		super(context);
 		this.action = "push";
 	}

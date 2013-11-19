@@ -5,7 +5,7 @@ public class EventEntry extends Entry {
 	public String logoUrl = "";
 	public String title = "";
 	public String content = "";
-	public String date = "";
+	public long date = 0;
 	public String eid = "";
 	public String peid = "";
 
